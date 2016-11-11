@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.3)
+project(cppunit-download)
+
+ include(ExternalProject)
+ 
+  ExternalProject_Add(
+      cppunit
+      GIT_REPOSITORY git://anongit.freedesktop.org/git/libreoffice/cppunit/
+      GIT_TAG           "feature/cmake"
+      SOURCE_DIR        "${CMAKE_BINARY_DIR}/cppunit-src"
+      BINARY_DIR        "${CMAKE_BINARY_DIR}/cppunit-build"
+      #INSTALL_DIR        "${CMAKE_CURRENT_BINARY_DIR}/cppunit"
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND     ""
+      #BUILD_IN_SOURCE 1
+      INSTALL_COMMAND   ""
+      #TEST_COMMAND      ""
+      LOG_DOWNLOAD      1
+      LOG_BUILD         1
+  )
+
