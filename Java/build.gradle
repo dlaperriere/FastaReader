@@ -1,0 +1,98 @@
+/*
+ * Gradle 3.1 build file https://docs.gradle.org/3.1/userguide/tutorial_java_projects.html
+ */
+
+
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+apply plugin: 'maven'
+
+
+version = '1.0'
+def main_class = 'com.github.dlaperriere.FastaTools'
+def current_os = '?'
+
+
+ 
+// project dependencies repository
+repositories {
+    jcenter()
+    maven {
+       url 'http://mvnrepository.com/'
+    }
+       
+	
+}
+
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    // The production code uses the SLF4J logging API at compile time
+   compile 'org.slf4j:slf4j-api:1.7.12'
+
+
+    // sfl4j  implementation: logback use src\resources\logback.xml                                                                                                                                                                        
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+
+    // test framework 
+    testCompile 'junit:junit:4.12'
+
+    // https://mvnrepository.com/artifact/gnu.getopt/java-getopt
+    compile group: 'gnu.getopt', name: 'java-getopt', version: '1.0.13'
+
+}
+
+
+// detect os
+task os << {
+   String osName = org.gradle.internal.os.OperatingSystem.current().getName();
+   String osVersion = org.gradle.internal.os.OperatingSystem.current().getVersion();
+   println "*** $osName  ($osVersion) was detected. ***"
+   current_os = osName
+}
+
+
+//create Jar without all dependencies
+jar {
+
+  // set manifest
+  manifest {
+    attributes(
+      'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+      'Main-Class': main_class,
+      'Implementation-Version': version
+      
+    )
+   exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA' 
+   
+  }
+}
+
+//create a single Jar with all dependencies
+task fatjar(dependsOn: [compileJava,jar], type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'Gradle '+rootProject.name+' Jar File',
+	 'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+        	'Implementation-Version': version,
+        	'Main-Class': main_class
+    }
+    baseName = project.name + '-all'
+    
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }  with jar
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA' 
+}
+
+// run main program
+task run( dependsOn: [compileJava,jar,fatjar], type: JavaExec) {        
+
+    main = main_class                                                                                                                                                                                                                     
+    classpath = sourceSets.main.runtimeClasspath                                                                                                                                                                      
+}
+
+// run fatjar at the en of the build
+build.finalizedBy(fatjar)
