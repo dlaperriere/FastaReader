@@ -1,0 +1,10 @@
+>test id description
+>test bad char
+ ;.,3
+
+a	c
+ g
+t
+
+>test eof
+acgt nnn
