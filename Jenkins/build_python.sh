@@ -16,7 +16,7 @@ mkdir $build_dir
 cd $build_dir
 cmake -DUNIT_TEST=OFF -DSWIG_PYTHON=ON -DCMAKE_CXX_FLAGS=-fPIC -DPYTHON_EXECUTABLE=/usr/bin/python3 ..
 make clean
-make
+make -j 2
 cd ..
 
 cp build/lib/_PythonFastaReader.so Python/_FastaReader.so

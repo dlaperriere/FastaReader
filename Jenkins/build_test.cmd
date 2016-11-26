@@ -8,7 +8,7 @@ rmdir /S /Q %build_dir%\
 mkdir build
 cd build
 cmake ..
-cmake --build . --config Release
+cmake --build . --config Release -- /m:2
 copy /Y cppunit-src\bin\Release\cppunit.dll ..\test\
 copy /Y bin\Release\*.exe ..\test\
 cd ..

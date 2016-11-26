@@ -9,7 +9,7 @@ mkdir %build_dir%
 cd %build_dir%
 
 cmake -G "MinGW Makefiles" -DUNIT_TEST=ON -DSWIG_PERL=ON .. 
-cmake --build .
+cmake --build . -- -j 2
 ctest
 
 copy /y lib\libPerlFastaReader.dll ..\Perl\FastaReader.dll

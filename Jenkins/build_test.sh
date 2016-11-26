@@ -16,7 +16,7 @@ mkdir $build_dir
 cd $build_dir
 cmake  ..
 make clean
-make
+make -j 2
 ctest
 cd ..
 
