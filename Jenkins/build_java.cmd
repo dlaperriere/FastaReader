@@ -10,13 +10,15 @@ rmdir /S /Q %build_dir%\
 mkdir %build_dir%
 cd %build_dir%
 
+echo --------------------------------
 echo generate SWIG java bindings 
 cmake -G "Visual Studio 14 Win64" -DUNIT_TEST=OFF -DSWIG_JAVA=ON ..
-cmake --build . --config Release
+cmake --build . --config Release -- /m:2
 copy /y lib\Release\FastaReaderJAVA.dll ..\Java\FastaReader.dll
 
 cd ..
 
+echo --------------------------------
 echo run example program
 cd Java
 
@@ -28,11 +30,11 @@ copy /y Fasta*.java com\github\dlaperriere\
 copy /y SWIG*.java com\github\dlaperriere\
 
 mkdir src
-mkdir src/main
-mkdir src/main/java
-mkdir src/main/java/com
-mkdir src/main/java/com/github
-mkdir src/main/java/com/github/dlaperriere
+mkdir src\main
+mkdir src\main\java
+mkdir src\main\java\com
+mkdir src\main\java\com\github
+mkdir src\main\java\com\github\dlaperriere
 copy /y Fasta*.java src\main\java\com\github\dlaperriere\
 copy /y SWIG*.java src\main\java\com\github\dlaperriere\
 
@@ -47,12 +49,10 @@ javac *.java
 javac com\github\dlaperriere\*.java
 java -cp .;%CD% example
  
-
+echo --------------------------------
 echo gradle build and test
 rmdir /S /Q build
-call gradle clean
-call gradle test
-call gradle run
+call gradle clean test run
 rem java -cp .;%CD% -jar build\libs\FastaTools-all-1.0.jar -h
 java -jar build\libs\FastaTools-all-1.0.jar -c stats -f ..\test\data\masked.fa
 

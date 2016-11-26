@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-set -o pipefail
 
 start_dir=$PWD
 build_dir="./build"
@@ -10,17 +8,19 @@ if [[ -d "$build_dir" ]]; then
     rm -rf $build_dir
 fi
 
+echo --------------------------------
 echo generate SWIG java bindings
 mkdir $build_dir
 cd $build_dir
 
 cmake  -DUNIT_TEST=OFF -DSWIG_JAVA=ON -DCMAKE_CXX_FLAGS=-fPIC ..
 make clean
-make 
+make -j 2
 cp lib/libFastaReaderJAVA.so ../Java/libFastaReader.so
 
 cd ..
 
+echo --------------------------------
 echo run example program
 cd Java
 
@@ -54,12 +54,10 @@ javac com/github/dlaperriere/*.java
 export LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH
 java -cp .:$PWD example
  
-
+echo --------------------------------
 echo gradle build and test
 rm -rf $build_dir
-gradle clean
-gradle test
-gradle run
+gradle clean test run
 # java -cp .;%CD% -jar build/libs/FastaTools-all-1.0.jar -h
 java -jar build/libs/FastaTools-all-1.0.jar -c stats -f ../test/data/masked.fa
 
