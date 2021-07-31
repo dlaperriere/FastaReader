@@ -60,6 +60,7 @@ rm -rf $build_dir
 gradle clean test run
 # java -cp .;%CD% -jar build/libs/FastaTools-all-1.0.jar -h
 java -jar build/libs/FastaTools-all-1.0.jar -c stats -f ../test/data/masked.fa
+#java -jar build/libs/FastaTools-1.0.jar -c stats -f ../test/data/masked.fa
 
 
 cd $start_dir
