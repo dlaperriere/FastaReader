@@ -2,6 +2,15 @@
 FIND_PACKAGE(SWIG REQUIRED)
 IF(SWIG_FOUND)
 
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.13")
+  # policy introduced in CMake 3.13
+  cmake_policy(SET CMP0078 NEW)
+endif()
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.14")
+  # policy introduced in CMake 3.14
+  cmake_policy(SET CMP0086 NEW)
+endif()
+
 MESSAGE(STATUS "   === Generating perl bindings ===")
 
 INCLUDE(${SWIG_USE_FILE})
@@ -29,7 +38,7 @@ IF(PERLLIBS_FOUND)
    if(${CMAKE_VERSION} VERSION_LESS "3.8.0") 
      SWIG_ADD_MODULE(${MODULE_NAME} perl  ${INTERFACE_FILE} )
    else()
-     SWIG_ADD_LIBRARY(${MODULE_NAME} LANGUAGE  perl SOURCES ${INTERFACE_FILE} )
+     SWIG_ADD_LIBRARY(${MODULE_NAME} LANGUAGE  perl TYPE MODULE SOURCES ${INTERFACE_FILE} )
    endif()
 
    SWIG_LINK_LIBRARIES(${MODULE_NAME} ${PERL_LIBRARY} FastaReader)

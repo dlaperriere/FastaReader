@@ -2,6 +2,15 @@
 FIND_PACKAGE(SWIG REQUIRED)
 IF(SWIG_FOUND)
 
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.13")
+  # policy introduced in CMake 3.13
+  cmake_policy(SET CMP0078 NEW)
+endif()
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.14")
+  # policy introduced in CMake 3.14
+  cmake_policy(SET CMP0086 NEW)
+endif()
+
 MESSAGE(STATUS "   === Generating python bindings ===")
 
 INCLUDE(${SWIG_USE_FILE})
