@@ -47,12 +47,23 @@ dependencies {
 
 
 // detect os
-task os << {
+task os {
+  doLast { 
    String osName = org.gradle.internal.os.OperatingSystem.current().getName();
    String osVersion = org.gradle.internal.os.OperatingSystem.current().getVersion();
    println "*** $osName  ($osVersion) was detected. ***"
    current_os = osName
+ }
 }
+
+// The Task.leftShift(Closure) method has been deprecated and is scheduled to be removed in Gradle 5.0
+// detect os
+//task os << {
+//   String osName = org.gradle.internal.os.OperatingSystem.current().getName();
+//   String osVersion = org.gradle.internal.os.OperatingSystem.current().getVersion();
+//   println "*** $osName  ($osVersion) was detected. ***"
+//   current_os = osName
+//}
 
 
 //create Jar without all dependencies
@@ -82,12 +93,19 @@ task fatjar(dependsOn: [compileJava,jar], type: Jar) {
     baseName = project.name + '-all'
     
     doFirst {
-        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }  with jar
-    }
+        from { 
+               
+              configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+              configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+              // https://stackoverflow.com/questions/49278063/how-do-i-create-an-executable-fat-jar-with-gradle-with-implementation-dependenci
+        } 
+    }  with jar
+    
     exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA' 
 }
 
 // run main program
+//task run( dependsOn: [compileJava,jar], type: JavaExec) {        
 task run( dependsOn: [compileJava,jar,fatjar], type: JavaExec) {        
 
     main = main_class                                                                                                                                                                                                                     
@@ -95,4 +113,4 @@ task run( dependsOn: [compileJava,jar,fatjar], type: JavaExec) {
 }
 
 // run fatjar at the en of the build
-build.finalizedBy(fatjar)
+//build.finalizedBy(fatjar)
