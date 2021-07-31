@@ -56,14 +56,6 @@ task os {
  }
 }
 
-// The Task.leftShift(Closure) method has been deprecated and is scheduled to be removed in Gradle 5.0
-// detect os
-//task os << {
-//   String osName = org.gradle.internal.os.OperatingSystem.current().getName();
-//   String osVersion = org.gradle.internal.os.OperatingSystem.current().getVersion();
-//   println "*** $osName  ($osVersion) was detected. ***"
-//   current_os = osName
-//}
 
 
 //create Jar without all dependencies
@@ -112,5 +104,3 @@ task run( dependsOn: [compileJava,jar,fatjar], type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath                                                                                                                                                                      
 }
 
-// run fatjar at the en of the build
-//build.finalizedBy(fatjar)
